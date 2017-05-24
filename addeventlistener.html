@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<button type="button" id="mybtn">按钮</button>
+	</body>
+		<script>
+		var handlers = {};
+		var eventUtil = {
+			addHandler	: function(element, type, handler){
+				if(!handlers[type]){
+				    handlers[type]=[handler];
+				}else{
+				    handlers[type].push(handler);
+				}
+				if(element.addEventListener){
+					element.addEventListener(type, handler, false);
+				}else if (element.attachEvent){
+					element.attachEvent('on' + type , handler);
+				}else{
+					element['on' + type] = handler;
+				}
+			},
+			removeHandler : function(element, type, handler){
+				var fun;
+				for(var i=0,len=handlers[type].length;i<len;i++){
+				    if(handlers[type][i].toString()==handler.toString()){
+				    	fun = handlers[type][i];
+				        handlers[type].splice(i,1);
+				    }
+				}
+				if(element.removeEventListener){
+					element.removeEventListener(type, fun, false);
+				}else if(element.detachEvent){
+					element.detachEvent('on' + type, fun);
+				}else {
+					element['on' + type] = null;
+				}
+			}
+		};
+
+		var btn = document.getElementById('mybtn');
+		var handler = function(){
+			console.log('hello');
+		};
+		
+		eventUtil.addHandler(btn, 'click', function(e){
+			console.log('hello');
+		});
+		eventUtil.removeHandler(btn, 'click',function(e){
+			console.log('hello');
+		});
+
+	</script>
+</html>
